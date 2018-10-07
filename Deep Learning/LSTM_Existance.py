@@ -99,11 +99,6 @@ with tf.name_scope('RNN'):
   cell2 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell2_LSTM')
   cell2 = tf.nn.rnn_cell.DropoutWrapper(cell2, output_keep_prob=dropout_rate)
   cell3 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell3_LSTM')
-  cell3 = tf.nn.rnn_cell.DropoutWrapper(cell3, output_keep_prob=dropout_rate)
-  cell4 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell4_LSTM')
-  cell4 = tf.nn.rnn_cell.DropoutWrapper(cell4, output_keep_prob=dropout_rate)
-  cell5 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell5_LSTM')
-  cell5 = tf.nn.rnn_cell.DropoutWrapper(cell5, output_keep_prob=dropout_rate)
 
   # Make combination of cells 
   multi_cell = tf.nn.rnn_cell.MultiRNNCell([cell, cell2, cell3])
@@ -166,5 +161,3 @@ saver.save(sess, save_path, total_epoch)
 print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: batch_xs, Y: batch_ys, dropout_rate: 1}))
 print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: test_xs, Y: test_ys, dropout_rate: 1}))
 
-
-"""# **Tensorboard 사용하기**"""
