@@ -93,6 +93,7 @@ tf.reset_default_graph()
 # Set X, Y as place holder
 X = tf.placeholder(tf.float32, [None, batch_size, n_input], name='X')
 Y = tf.placeholder(tf.float32, [None, n_class], name='Y')
+dropout_rate = tf.placeholder("float32")
 
 with tf.name_scope('weight'):
   W = tf.Variable(tf.random_uniform([n_hidden, n_class]), name='W')
@@ -108,16 +109,16 @@ with tf.name_scope('RNN'):
 
 with tf.name_scope('Dropout'):
   # To avoid overfitting
-  cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=0.5)
-
+  cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=dropout_rate)
   cell2 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell2_LSTM')
-  cell3 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell3_LSTM')
-#  cell4 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell4_LSTM')
-  cell5 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell5_LSTM')
+  cell2 = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=dropout_rate)
+  cell3 = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, name='cell3_LSTM')\
+  cell3 = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=dropout_rate)
+
 
   # Make combination of cells 
-  multi_cell = tf.nn.rnn_cell.MultiRNNCell([cell, cell2])
-  multi_cell = tf.nn.rnn_cell.DropoutWrapper(multi_cell, output_keep_prob=1)
+  multi_cell = tf.nn.rnn_cell.MultiRNNCell([cell, cell2, cell3])
+  multi_cell = tf.nn.rnn_cell.DropoutWrapper(multi_cell, output_keep_prob=dropout_rate)
 
 with tf.name_scope('output'):
   # Make  Deep RNN
@@ -159,8 +160,8 @@ with tf.Session() as sess:
  
   for epoch in range(total_epoch): 
      
-    summary, _, loss =  sess.run([merged, optimizer, cost], 
-                      feed_dict={X: batch_xs, Y: batch_ys})
+    summary, _, loss =  sess.run([merged, optimizer, cost],
+                      feed_dict={X: batch_xs, Y: batch_ys, dropout_rate})
     writer.add_summary(summary, epoch)
     
     if epoch % 10 == 0:
@@ -176,6 +177,6 @@ saver.save(sess, save_path, total_epoch)
 #test_batch_size = len(X_data)   
 test_xs = np.reshape(X_test, (-1, batch_size, n_input))
 test_ys = Y_test
-print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: batch_xs, Y: batch_ys}))
-print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: test_xs, Y: test_ys}))
+print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: batch_xs, Y: batch_ys, dropout_rate: 1}))
+print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: test_xs, Y: test_ys, dropout_rate: 1}))
 
