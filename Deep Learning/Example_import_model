@@ -1,0 +1,13 @@
+with tf.Session() as sess:
+    saver = tf.train.import_meta_graph("meta-graph path")
+    # directly choose
+    ckpt_path = saver.restore(sess, "saved model path")
+
+    graph = tf.get_default_graph()
+    X = graph.get_tensor_by_name("X:0")
+    W = graph.get_tensor_by_name("W:1")
+    b = graph.get_tensor_by_name("b:2")
+    dropout_rate = graph.get_tensor_by_name("dropout_rate:3")
+
+    op = graph.get_operation_by_name("model")
+    predictions = sess.run(op, feed_dict={X: X_data, dropout_rate: 1})
