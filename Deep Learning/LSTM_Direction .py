@@ -93,7 +93,7 @@ tf.reset_default_graph()
 # Set X, Y as place holder
 X = tf.placeholder(tf.float32, [None, batch_size, n_input], name='X')
 Y = tf.placeholder(tf.float32, [None, n_class], name='Y')
-dropout_rate = tf.placeholder("float32")
+dropout_rate = tf.placeholder(tf.float32, name='dropout_rate')
 
 with tf.name_scope('weight'):
   W = tf.Variable(tf.random_uniform([n_hidden, n_class]), name='W')
