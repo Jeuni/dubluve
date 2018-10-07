@@ -174,5 +174,3 @@ print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: batch_xs, Y: ba
 print('정확도: %.2f' % sess.run(accuracy * 100, feed_dict={X: test_xs, Y: test_ys, dropout_rate: 1}))
 
 
-"""# **Tensorboard 사용하기**"""
-
