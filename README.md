@@ -1,2 +1,7 @@
 # dubluve
-PIR sensor-based accident detection program in Zoo
+PIR센서를 이용한 RNN기반 물체 감지 및 구별 시스템
+
+
+
+
+
